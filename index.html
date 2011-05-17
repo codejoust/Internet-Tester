@@ -5,17 +5,25 @@
   <script>
      var internet_tester = {
         fetch: function(){
+          var self = this;
           $('#status_container').addClass('loading').find('.load').show('fast');
-          $.get('check.php', function(text){
-            var chg = (text == 'true') ? true : false;
-            if (internet_tester.lastcheck == !chg && internet_tester.lastcheck !== null){ internet_tester.play_sound(chg); }
+          delete this.img;
+          this.img = document.createElement('img');
+          this.img.onload = function(){ self.process(true); };
+          this.img.onerror = function(){ self.process(false); };
+          this.img.src = 'http://www.google.com/images/logo_sm.gif';
+        },
+           //$.get('check.php', function(text){
+          //  var chg = (text == 'true') ? true : false;
+        process: function(chg){         
+   if (internet_tester.lastcheck == !chg && internet_tester.lastcheck !== null){ internet_tester.play_sound(chg); }
             $('#status_container')
               .removeClass('in-'+!chg).addClass('in-'+chg).removeClass('loading')
               .find('#in-'+!chg).hide().end()
               .find('.load').hide().end()
               .find('#in-'+chg).fadeIn();
             internet_tester.lastcheck = chg;
-          });
+          //});
         },
 	play_yay: function(){ play_sound(true); },
         play_sound: function(on){
