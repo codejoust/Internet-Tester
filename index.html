@@ -13,8 +13,6 @@
           this.img.onerror = function(){ self.process(false); };
           this.img.src = 'http://www.google.com/images/logo_sm.gif';
         },
-           //$.get('check.php', function(text){
-          //  var chg = (text == 'true') ? true : false;
         process: function(chg){         
    if (internet_tester.lastcheck == !chg && internet_tester.lastcheck !== null){ internet_tester.play_sound(chg); }
             $('#status_container')
@@ -23,7 +21,6 @@
               .find('.load').hide().end()
               .find('#in-'+chg).fadeIn();
             internet_tester.lastcheck = chg;
-          //});
         },
 	play_yay: function(){ play_sound(true); },
         play_sound: function(on){
