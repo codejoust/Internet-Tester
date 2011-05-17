@@ -1,0 +1,61 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <script src="jquery-1.4.4.min.js"></script>
+  <script>
+     var internet_tester = {
+        fetch: function(){
+          $('#status_container').addClass('loading').find('.load').show('fast');
+          $.get('check.php', function(text){
+            var chg = (text == 'true') ? true : false;
+            if (internet_tester.lastcheck == !chg && internet_tester.lastcheck !== null){ internet_tester.play_sound(chg); }
+            $('#status_container')
+              .removeClass('in-'+!chg).addClass('in-'+chg).removeClass('loading')
+              .find('#in-'+!chg).hide().end()
+              .find('.load').hide().end()
+              .find('#in-'+chg).fadeIn();
+            internet_tester.lastcheck = chg;
+          });
+        },
+	play_yay: function(){ play_sound(true); },
+        play_sound: function(on){
+          var audio = this.audio = document.createElement('audio');
+          audio.src = 'sounds/' + (on ? 'startup.mp3' : 'fed_siren.mp3');
+          audio.autoplay = true;
+          $(audio).appendTo('body');
+          audio.play();
+        },
+        timeout: 30,
+        lastcheck: null,
+	runtimeout: function(){
+          setTimeout(internet_tester.runtimeout, internet_tester.timeout * 1000);
+          internet_tester.fetch();
+        }
+    };
+    $(function(){
+      internet_tester.runtimeout();
+    });
+  </script>
+  <style>
+    body { font-family: georgia; font-size: 3em; }
+    #status_container { width:400px; height:400px; margin:0 auto;
+	border-radius:250px; -moz-border-radius:250px; -webkit-border-radius:250px; -o-border-radius:150px;
+	 }
+    #status_container.in-true { background: darkgreen; }
+    #status_container.in-false { background: maroon; }
+    #status_container.loading { background:grey; }
+    body { width:550px; margin:0 auto;}
+    #status_container.loading h1 { display:none;}
+    #status_container h1,h2 { color: white; padding: 50px; padding-top:140px }
+    #status_container h2 { padding-top:160px; }
+  </style>
+</head>
+<body>
+  <h3>Is the internet up?</h3>
+  <div id="status_container">
+    <h1 id="in-true">Yes!&#10003;</h1>
+    <h2 id="" class="load">loading.</h2>
+    <h1 id="in-false">No :(</h1>
+  </div>
+</body>
+</html>
